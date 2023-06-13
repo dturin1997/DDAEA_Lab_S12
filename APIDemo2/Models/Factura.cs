@@ -7,5 +7,6 @@
         public List<DetalleFactura>? DetalleFacturas { get; set; }
         public int ClienteID { get; set; }
         public Cliente? Cliente { get; set; }
+        public bool Estado { get; set;}
     }
 }

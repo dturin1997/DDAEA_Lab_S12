@@ -30,7 +30,7 @@ namespace APIDemo2.Controllers
               return NotFound();
           }
             //return await _context.Facturas.Include(x => x.DetalleFacturas.ToList().ForEach(y=> _context.Products.Find(y.ProductID)).ToListAsync();
-            return await _context.Facturas.Include(x => x.DetalleFacturas).ThenInclude(detalle => detalle.Product).ThenInclude(category => category.Category).ToListAsync();
+            return await _context.Facturas.Where(f => f.Estado != false).Include(x => x.DetalleFacturas).ThenInclude(detalle => detalle.Product).ThenInclude(category => category.Category).ToListAsync();
         }
 
         // GET: api/Facturas/5
@@ -91,6 +91,7 @@ namespace APIDemo2.Controllers
           {
               return Problem("Entity set 'DemoContext.Facturas'  is null.");
           }
+            factura.Estado = true;
             _context.Facturas.Add(factura);
             await _context.SaveChangesAsync();
 
@@ -106,6 +107,27 @@ namespace APIDemo2.Controllers
                 return NotFound();
             }
             var factura = await _context.Facturas.FindAsync(id);
+            if (factura == null)
+            {
+                return NotFound();
+            }
+
+            _context.Facturas.Remove(factura);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/Facturas/5
+        [HttpDelete("DeleteFacturaLogica/{id}")]
+        public async Task<IActionResult> DeleteFacturaLogica(int id)
+        {
+            if (_context.Facturas == null)
+            {
+                return NotFound();
+            }
+            var factura = await _context.Facturas.FindAsync(id);
+            factura.Estado = false;
             if (factura == null)
             {
                 return NotFound();
