@@ -133,7 +133,7 @@ namespace APIDemo2.Controllers
                 return NotFound();
             }
 
-            _context.Facturas.Remove(factura);
+            //_context.Facturas.Remove(factura);
             await _context.SaveChangesAsync();
 
             return NoContent();
